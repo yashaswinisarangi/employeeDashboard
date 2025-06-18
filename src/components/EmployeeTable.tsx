@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Edit } from 'lucide-react';
 import { Employee } from '../types/Employee';
 
 interface EmployeeTableProps {
@@ -10,6 +10,7 @@ interface EmployeeTableProps {
   onSelectEmployee: (empId: string) => void;
   onSelectAll: (selected: boolean) => void;
   onDeleteEmployee: (empId: string) => void;
+  onEditEmployee: (employee: Employee) => void;
 }
 
 const EmployeeTable: React.FC<EmployeeTableProps> = ({ 
@@ -19,7 +20,8 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
   selectedEmployees, 
   onSelectEmployee, 
   onSelectAll,
-  onDeleteEmployee 
+  onDeleteEmployee,
+  onEditEmployee
 }) => {
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -35,9 +37,22 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
   };
 
   const getRoleTypeColor = (roleType: string) => {
-    return roleType === 'Engineering' 
-      ? 'bg-blue-100 text-blue-800' 
-      : 'bg-purple-100 text-purple-800';
+    switch (roleType) {
+      case 'Engineering':
+        return 'bg-blue-100 text-blue-800';
+      case 'Product':
+        return 'bg-purple-100 text-purple-800';
+      case 'Design':
+        return 'bg-pink-100 text-pink-800';
+      case 'Analytics':
+        return 'bg-orange-100 text-orange-800';
+      case 'Marketing':
+        return 'bg-green-100 text-green-800';
+      case 'Sales':
+        return 'bg-indigo-100 text-indigo-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
   };
 
   const isAllSelected = employees.length > 0 && selectedEmployees.length === employees.length;
@@ -73,11 +88,19 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                   />
                 </th>
               )}
+
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                PRJ Core Alignment
+              </th>
+   
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Employee ID
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Core Alignment
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Core Team
@@ -101,6 +124,9 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                 Hire Date
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Termination Date
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Modified By
               </th>
               {isAdmin && (
@@ -113,7 +139,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
           <tbody className="bg-white divide-y divide-gray-200">
             {employees.length === 0 ? (
               <tr>
-                <td colSpan={isAdmin ? 12 : 10} className="px-6 py-12 text-center text-gray-500">
+                <td colSpan={isAdmin ? 15 : 13} className="px-6 py-12 text-center text-gray-500">
                   <div className="flex flex-col items-center">
                     <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                       <span className="text-2xl text-gray-400">📊</span>
@@ -141,53 +167,78 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                       />
                     </td>
                   )}
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+
+                  <td className="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {employee.prj_align}
+                  </td>
+
+                  <td className="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
                     {employee.emp_id}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-2 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{employee.resource_name}</div>
-                    <div className="text-sm text-gray-500">{employee.core_alignment}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-900">
+                    {employee.core_alignment}
+                  </td>
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-900">
                     {employee.core_team}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-900">
                     {employee.job_title}
                   </td>
+                  
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleTypeColor(employee.role_type)}`}>
                       {employee.role_type}
                     </span>
                   </td>
+
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(employee.status)}`}>
                       {employee.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-900">
                     {employee.base_location}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800">
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800">
                     <a href={`mailto:${employee.email_id}`}>{employee.email_id}</a>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-900">
                     {new Date(employee.hire_date).toLocaleDateString()}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-900">
+                    {employee.term_date ? new Date(employee.term_date).toLocaleDateString() : '-'}
+                  </td>
+
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-900">
                     <div>{employee.modified_by}</div>
                     <div className="text-xs text-gray-500">
                       {new Date(employee.modified_at).toLocaleDateString()}
                     </div>
                   </td>
+
                   {isAdmin && (
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      <button
-                        onClick={() => onDeleteEmployee(employee.emp_id)}
-                        className="text-red-600 hover:text-red-800 transition-colors p-1 rounded hover:bg-red-50"
-                        title="Delete employee"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                    <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-900">
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => onEditEmployee(employee)}
+                          className="text-blue-600 hover:text-blue-800 transition-colors p-1 rounded hover:bg-blue-50"
+                          title="Edit employee"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => onDeleteEmployee(employee.emp_id)}
+                          className="text-red-600 hover:text-red-800 transition-colors p-1 rounded hover:bg-red-50"
+                          title="Delete employee"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   )}
                 </tr>
