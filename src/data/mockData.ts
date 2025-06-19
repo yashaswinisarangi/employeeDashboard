@@ -15,7 +15,12 @@ export const mockEmployees: Employee[] = [
     hire_date: "2022-03-15",
     term_date: undefined,
     modified_by: "Sarah Mitchell",
-    modified_at: "2024-01-15"
+    modified_at: "2024-01-15",
+    vendor: "TechCorp Solutions",
+    contact_number: "+1-555-0123",
+    team_name: "Frontend Development Team",
+    manager_name: "Sarah Mitchell",
+    secondary_team: "UI/UX Team"
   },
   {
     emp_id: "EMP002",
@@ -31,7 +36,12 @@ export const mockEmployees: Employee[] = [
     hire_date: "2021-08-20",
     term_date: undefined,
     modified_by: "David Thompson",
-    modified_at: "2024-01-10"
+    modified_at: "2024-01-10",
+    vendor: "DevSolutions Inc",
+    contact_number: "+1-555-0234",
+    team_name: "Backend Development Team",
+    manager_name: "David Thompson",
+    secondary_team: "DevOps Team"
   },
   {
     emp_id: "EMP003",
@@ -40,14 +50,19 @@ export const mockEmployees: Employee[] = [
     core_alignment: "Product Management",
     core_team: "Product Team",
     job_title: "Product Manager",
-    role_type: "Product",
+    role_type: "Non Engineering",
     status: "Active",
     base_location: "Austin, TX",
     email_id: "michael.chen@company.com",
     hire_date: "2023-01-10",
     term_date: undefined,
     modified_by: "Emily Rodriguez",
-    modified_at: "2024-01-08"
+    modified_at: "2024-01-08",
+    vendor: "ProductWorks LLC",
+    contact_number: "+1-555-0345",
+    team_name: "Product Strategy Team",
+    manager_name: "Emily Rodriguez",
+    secondary_team: "Marketing Team"
   },
   {
     emp_id: "EMP004",
@@ -56,14 +71,19 @@ export const mockEmployees: Employee[] = [
     core_alignment: "UI/UX Design",
     core_team: "Design Team",
     job_title: "Senior UX Designer",
-    role_type: "Design",
+    role_type: "Non Engineering",
     status: "Active",
     base_location: "Seattle, WA",
     email_id: "emily.davis@company.com",
     hire_date: "2022-06-01",
     term_date: undefined,
     modified_by: "Michael Chen",
-    modified_at: "2024-01-12"
+    modified_at: "2024-01-12",
+    vendor: "DesignHub Studios",
+    contact_number: "+1-555-0456",
+    team_name: "UX Design Team",
+    manager_name: "Michael Chen",
+    secondary_team: "Product Team"
   },
   {
     emp_id: "EMP005",
@@ -72,14 +92,19 @@ export const mockEmployees: Employee[] = [
     core_alignment: "Quality Assurance",
     core_team: "QA Team",
     job_title: "Senior QA Engineer",
-    role_type: "Engineering",
+    role_type: "Both",
     status: "Inactive",
     base_location: "Chicago, IL",
     email_id: "david.wilson@company.com",
     hire_date: "2020-11-15",
     term_date: "2024-01-05",
     modified_by: "Jessica Williams",
-    modified_at: "2024-01-05"
+    modified_at: "2024-01-05",
+    vendor: "QualityFirst Partners",
+    contact_number: "+1-555-0567",
+    team_name: "Quality Assurance Team",
+    manager_name: "Jessica Williams",
+    secondary_team: "Engineering Team A"
   },
   {
     emp_id: "EMP006",
@@ -95,7 +120,12 @@ export const mockEmployees: Employee[] = [
     hire_date: "2023-04-18",
     term_date: undefined,
     modified_by: "Robert Johnson",
-    modified_at: "2024-01-14"
+    modified_at: "2024-01-14",
+    vendor: "CloudOps Solutions",
+    contact_number: "+1-555-0678",
+    team_name: "Infrastructure Team",
+    manager_name: "Robert Johnson",
+    secondary_team: "Backend Development Team"
   },
   {
     emp_id: "EMP007",
@@ -104,29 +134,18 @@ export const mockEmployees: Employee[] = [
     core_alignment: "Data Science",
     core_team: "Data Team",
     job_title: "Data Scientist",
-    role_type: "Analytics",
+    role_type: "Both",
     status: "Open",
     base_location: "Boston, MA",
     email_id: "james.anderson@company.com",
     hire_date: "2023-09-01",
     term_date: undefined,
     modified_by: "Amanda Davis",
-    modified_at: "2024-01-11"
-  },
-  {
-    emp_id: "EMP008",
-    resource_name: "Maria Garcia",
-    prj_align: "PRJ3321",
-    core_alignment: "Marketing",
-    core_team: "Marketing Team",
-    job_title: "Marketing Specialist",
-    role_type: "Marketing",
-    status: "Active",
-    base_location: "Miami, FL",
-    email_id: "maria.garcia@company.com",
-    hire_date: "2022-12-05",
-    term_date: undefined,
-    modified_by: "Christopher Lee",
-    modified_at: "2024-01-09"
+    modified_at: "2024-01-11",
+    vendor: "DataTech Analytics",
+    contact_number: "+1-555-0789",
+    team_name: "Data Science Team",
+    manager_name: "Amanda Davis",
+    secondary_team: "Product Team"
   }
 ];

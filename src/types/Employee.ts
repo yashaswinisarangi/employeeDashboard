@@ -13,4 +13,9 @@ export interface Employee {
   term_date?: string;
   modified_by: string;
   modified_at: string;
+  vendor: string;
+  contact_number: string;
+  team_name: string;
+  manager_name: string;
+  secondary_team: string;
 }

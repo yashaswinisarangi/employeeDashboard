@@ -29,7 +29,12 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
     hire_date: '',
     term_date: '',
     modified_by: '',
-    modified_at: ''
+    modified_at: '',
+    vendor: '',
+    contact_number: '',
+    team_name: '',
+    manager_name: '',
+    secondary_team: ''
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -58,9 +63,27 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
     'Marketing Team',
     'Sales Team'
   ];
-  const roleTypeOptions = ['Engineering', 'Product', 'Design', 'Analytics', 'Marketing', 'Sales'];
+  const roleTypeOptions = ['Engineering', 'Non Engineering', 'Both'];
   const statusOptions = ['Active', 'Inactive', 'Open'];
-  const modifiedByOptions = [
+  const vendorOptions = [
+    'TechCorp Solutions',
+    'DevSolutions Inc',
+    'ProductWorks LLC',
+    'DesignHub Studios',
+    'QualityFirst Partners',
+    'CloudOps Solutions',
+    'DataTech Analytics'
+  ];
+  const teamNameOptions = [
+    'Frontend Development Team',
+    'Backend Development Team',
+    'Product Strategy Team',
+    'UX Design Team',
+    'Quality Assurance Team',
+    'Infrastructure Team',
+    'Data Science Team'
+  ];
+  const managerOptions = [
     'Sarah Mitchell',
     'David Thompson',
     'Emily Rodriguez',
@@ -69,6 +92,14 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
     'Robert Johnson',
     'Amanda Davis',
     'Christopher Lee'
+  ];
+  const secondaryTeamOptions = [
+    'UI/UX Team',
+    'DevOps Team',
+    'Marketing Team',
+    'Product Team',
+    'Engineering Team A',
+    'Backend Development Team'
   ];
 
   useEffect(() => {
@@ -93,6 +124,9 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
     }
     if (!formData.hire_date) {
       newErrors.hire_date = 'Hire date is required';
+    }
+    if (!formData.contact_number.trim()) {
+      newErrors.contact_number = 'Contact number is required';
     }
 
     setErrors(newErrors);
@@ -130,7 +164,7 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
         />
 
         {/* Modal panel */}
-        <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full sm:p-6">
+        <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl sm:w-full sm:p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center">
               <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full bg-blue-100">
@@ -149,7 +183,7 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Employee ID - Read only */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -346,21 +380,103 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
                 />
               </div>
 
-              {/* Modified By */}
+              {/* Vendor */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Vendor
+                </label>
+                <select
+                  value={formData.vendor}
+                  onChange={(e) => handleInputChange('vendor', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Vendor</option>
+                  {vendorOptions.map(option => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Contact Number */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Contact Number <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  value={formData.contact_number}
+                  onChange={(e) => handleInputChange('contact_number', e.target.value)}
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.contact_number ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                />
+                {errors.contact_number && (
+                  <p className="mt-1 text-sm text-red-600">{errors.contact_number}</p>
+                )}
+              </div>
+
+              {/* Team Name */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Team Name
+                </label>
+                <select
+                  value={formData.team_name}
+                  onChange={(e) => handleInputChange('team_name', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Team Name</option>
+                  {teamNameOptions.map(option => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Manager Name */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Manager Name
+                </label>
+                <select
+                  value={formData.manager_name}
+                  onChange={(e) => handleInputChange('manager_name', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Manager</option>
+                  {managerOptions.map(option => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Secondary Team */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Secondary Team
+                </label>
+                <select
+                  value={formData.secondary_team}
+                  onChange={(e) => handleInputChange('secondary_team', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Secondary Team</option>
+                  {secondaryTeamOptions.map(option => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Modified By - Text Input */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Modified By
                 </label>
-                <select
+                <input
+                  type="text"
                   value={formData.modified_by}
                   onChange={(e) => handleInputChange('modified_by', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select Modifier</option>
-                  {modifiedByOptions.map(option => (
-                    <option key={option} value={option}>{option}</option>
-                  ))}
-                </select>
+                />
               </div>
             </div>
 

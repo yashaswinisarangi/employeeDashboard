@@ -40,16 +40,10 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
     switch (roleType) {
       case 'Engineering':
         return 'bg-blue-100 text-blue-800';
-      case 'Product':
+      case 'Non Engineering':
         return 'bg-purple-100 text-purple-800';
-      case 'Design':
-        return 'bg-pink-100 text-pink-800';
-      case 'Analytics':
-        return 'bg-orange-100 text-orange-800';
-      case 'Marketing':
+      case 'Both':
         return 'bg-green-100 text-green-800';
-      case 'Sales':
-        return 'bg-indigo-100 text-indigo-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -127,6 +121,21 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                 Termination Date
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Vendor
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Contact Number
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Team Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Manager Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Secondary Team
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Modified By
               </th>
               {isAdmin && (
@@ -139,7 +148,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
           <tbody className="bg-white divide-y divide-gray-200">
             {employees.length === 0 ? (
               <tr>
-                <td colSpan={isAdmin ? 15 : 13} className="px-6 py-12 text-center text-gray-500">
+                <td colSpan={isAdmin ? 21 : 20} className="px-6 py-12 text-center text-gray-500">
                   <div className="flex flex-col items-center">
                     <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                       <span className="text-2xl text-gray-400">📊</span>
@@ -212,6 +221,28 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
 
                   <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-900">
                     {employee.term_date ? new Date(employee.term_date).toLocaleDateString() : '-'}
+                  </td>
+
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-900">
+                    {employee.vendor}
+                  </td>
+
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-900">
+                    <a href={`tel:${employee.contact_number}`} className="text-blue-600 hover:text-blue-800">
+                      {employee.contact_number}
+                    </a>
+                  </td>
+
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-900">
+                    {employee.team_name}
+                  </td>
+
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-900">
+                    {employee.manager_name}
+                  </td>
+
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-900">
+                    {employee.secondary_team}
                   </td>
 
                   <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-900">
