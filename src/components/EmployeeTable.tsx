@@ -6,10 +6,10 @@ interface EmployeeTableProps {
   employees: Employee[];
   loading: boolean;
   isAdmin: boolean;
-  selectedEmployees: string[];
-  onSelectEmployee: (empId: string) => void;
+  selectedEmployees: number[];
+  onSelectEmployee: (empId: number) => void;
   onSelectAll: (selected: boolean) => void;
-  onDeleteEmployee: (empId: string) => void;
+  onDeleteEmployee: (empId: number) => void;
   onEditEmployee: (employee: Employee) => void;
 }
 

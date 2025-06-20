@@ -16,7 +16,7 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
   employee
 }) => {
   const [formData, setFormData] = useState<Employee>({
-    emp_id: '',
+    emp_id: 0,
     resource_name: '',
     prj_align: '',
     core_alignment: '',
@@ -145,7 +145,7 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
     }
   };
 
-  const handleInputChange = (field: keyof Employee, value: string) => {
+  const handleInputChange = (field: keyof Employee, value: string | number) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
@@ -190,7 +190,7 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
                   Employee ID
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   value={formData.emp_id}
                   disabled
                   className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"

@@ -1,5 +1,5 @@
 export interface Employee {
-  emp_id: string;
+  emp_id: number;
   resource_name: string;
   prj_align: string;
   core_alignment: string;

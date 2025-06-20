@@ -2,7 +2,7 @@ import { Employee } from '../types/Employee';
 
 export const mockEmployees: Employee[] = [
   {
-    emp_id: "EMP001",
+    emp_id: 1001,
     resource_name: "John Smith",
     prj_align: "PRJ7782",
     core_alignment: "Frontend Development",
@@ -23,7 +23,7 @@ export const mockEmployees: Employee[] = [
     secondary_team: "UI/UX Team"
   },
   {
-    emp_id: "EMP002",
+    emp_id: 1002,
     resource_name: "Sarah Johnson",
     prj_align: "PRJ8722",
     core_alignment: "Backend Development",
@@ -44,7 +44,7 @@ export const mockEmployees: Employee[] = [
     secondary_team: "DevOps Team"
   },
   {
-    emp_id: "EMP003",
+    emp_id: 1003,
     resource_name: "Michael Chen",
     prj_align: "PRJ7782",
     core_alignment: "Product Management",
@@ -65,7 +65,7 @@ export const mockEmployees: Employee[] = [
     secondary_team: "Marketing Team"
   },
   {
-    emp_id: "EMP004",
+    emp_id: 1004,
     resource_name: "Emily Davis",
     prj_align: "PRJ8722",
     core_alignment: "UI/UX Design",
@@ -86,7 +86,7 @@ export const mockEmployees: Employee[] = [
     secondary_team: "Product Team"
   },
   {
-    emp_id: "EMP005",
+    emp_id: 1005,
     resource_name: "David Wilson",
     prj_align: "PRJ9901",
     core_alignment: "Quality Assurance",
@@ -107,7 +107,7 @@ export const mockEmployees: Employee[] = [
     secondary_team: "Engineering Team A"
   },
   {
-    emp_id: "EMP006",
+    emp_id: 1006,
     resource_name: "Lisa Rodriguez",
     prj_align: "PRJ8722",
     core_alignment: "DevOps",
@@ -128,7 +128,7 @@ export const mockEmployees: Employee[] = [
     secondary_team: "Backend Development Team"
   },
   {
-    emp_id: "EMP007",
+    emp_id: 1007,
     resource_name: "James Anderson",
     prj_align: "PRJ5543",
     core_alignment: "Data Science",

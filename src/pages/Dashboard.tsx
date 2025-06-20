@@ -12,30 +12,38 @@ import {
 import ConfirmationModal from '../components/ConfirmationModal';
 import EditEmployeeModal from '../components/EditEmployeeModal';
 import type { Employee } from '../types/Employee';
+import type { Hiring } from '../types/Hiring';
 import { mockEmployees } from '../data/mockData';
+import { mockHiringData } from '../data/hiringData';
 import EmployeeTable from '../components/EmployeeTable';
+import HiringTable from '../components/HiringTable';
 import AddPersonModal from "../components/AddPersonModal";
 import AddMultiple from "../components/AddMultiple";
 
 const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage, setEntriesPerPage] = useState(50);
+  const [selectedPage, setSelectedPage] = useState('Resourcing');
   const [filter, setFilter] = useState('Select');
   const [value, setValue] = useState('');
   const [goToPage, setGoToPage] = useState('');
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
+
+  // Data based on selected page
+  const currentData = selectedPage === 'Hiring' ? mockHiringData : mockEmployees;
   const startIndex = (currentPage - 1) * entriesPerPage;
   const endIndex = startIndex + entriesPerPage;
-  const paginatedEmployees = mockEmployees.slice(startIndex, endIndex);
+  const paginatedData = currentData.slice(startIndex, endIndex);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [entriesPerPage]);
+  }, [entriesPerPage, selectedPage]);
 
   const [employees, setEmployees] = useState<Employee[]>(mockEmployees);
+  const [hiringData] = useState<Hiring[]>(mockHiringData);
   const [isAdmin, setIsAdmin] = useState(true);
-  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+  const [selectedEmployees, setSelectedEmployees] = useState<number[]>([]);
   const [confirmationModal, setConfirmationModal] = useState<{
     isOpen: boolean;
     title: string;
@@ -58,7 +66,7 @@ const Dashboard = () => {
   const [isAddPersonModal, setIsAddPersonModal] = useState<boolean>(false);
   const [isAddMultipleModal, setIsAddMultipleModal] = useState<boolean>(false);
 
-  const totalEntries = mockEmployees.length;
+  const totalEntries = currentData.length;
   const totalPages = Math.ceil(totalEntries / entriesPerPage);
 
   const handlePrevious = () => {
@@ -77,8 +85,16 @@ const Dashboard = () => {
     }
   };
 
+  const getFilterOptions = () => {
+    if (selectedPage === 'Hiring') {
+      return ['Team', 'Status', 'Hiring Manager'];
+    }
+    return ['Team', 'Manager'];
+  };
+
   const handleAddFilter = () => {
-    if ((filter === 'Team' || filter === 'Manager') && value.trim() !== '') {
+    const filterOptions = getFilterOptions();
+    if (filterOptions.includes(filter) && value.trim() !== '') {
       const formatted = `${filter} - ${value.trim()}`;
       if (!selectedFilters.includes(formatted)) {
         setSelectedFilters([...selectedFilters, formatted]);
@@ -100,7 +116,7 @@ const Dashboard = () => {
     setEntriesPerPage(50);
   };
 
-  const handleSelectEmployee = (empId: string) => {
+  const handleSelectEmployee = (empId: number) => {
     setSelectedEmployees(prev =>
       prev.includes(empId)
         ? prev.filter(id => id !== empId)
@@ -116,7 +132,7 @@ const Dashboard = () => {
     }
   };
 
-  const handleDeleteEmployee = (empId: string) => {
+  const handleDeleteEmployee = (empId: number) => {
     const employee = employees.find(emp => emp.emp_id === empId);
     setConfirmationModal({
       isOpen: true,
@@ -130,7 +146,6 @@ const Dashboard = () => {
   };
 
   const handleEditEmployee = (employee: Employee) => {
-    console.log("Edit");
     setEditModal({
       isOpen: true,
       employee
@@ -146,64 +161,109 @@ const Dashboard = () => {
   };
 
   const handleExportCSV = () => {
-    const headers = [
-      "PRJ core alignment",
-      "Employee ID",
-      "Name",
-      "Core alignment",
-      "Core Team",
-      "Job Title",
-      "Role type",
-      "Status",
-      "Location",
-      "Email",
-      "Hire Date",
-      "Termination Date",
-      "Vendor",
-      "Contact Number",
-      "Team Name",
-      "Manager Name",
-      "Secondary Team",
-      "Modified By",
-      "Modified at",
-    ];
+    if (selectedPage === 'Hiring') {
+      const headers = [
+        "Team",
+        "REQ/FG",
+        "Sharepoint ID",
+        "Incremental/Backfill",
+        "Skill Set",
+        "EL Level",
+        "Resource",
+        "Remarks",
+        "Status",
+        "Vendor",
+        "Hiring Manager"
+      ];
 
-    const rows = employees.map(emp => [
-      emp.prj_align,
-      emp.emp_id,
-      emp.resource_name,
-      emp.core_alignment,
-      emp.core_team,
-      emp.job_title,
-      emp.role_type,
-      emp.status,
-      emp.base_location,
-      emp.email_id,
-      emp.hire_date,
-      emp.term_date,
-      emp.vendor,
-      emp.contact_number,
-      emp.team_name,
-      emp.manager_name,
-      emp.secondary_team,
-      emp.modified_by,
-      emp.modified_at,
-    ]);
+      const rows = hiringData.map(hiring => [
+        hiring.team,
+        hiring.req_fg,
+        hiring.sharepoint_id,
+        hiring.incremental_backfill,
+        hiring.skill_set,
+        hiring.el_level,
+        hiring.resource,
+        hiring.remarks,
+        hiring.status,
+        hiring.vendor,
+        hiring.hiring_manager
+      ]);
 
-    let csvContent =
-      headers.join(",") + "\n" +
-      rows.map(row => row.map(field =>
-        `"${(field ?? "").toString().replace(/"/g, '""')}"`
-      ).join(",")).join("\n");
+      let csvContent =
+        headers.join(",") + "\n" +
+        rows.map(row => row.map(field =>
+          `"${(field ?? "").toString().replace(/"/g, '""')}"`
+        ).join(",")).join("\n");
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'employees.csv');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'hiring_data.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      const headers = [
+        "PRJ core alignment",
+        "Employee ID",
+        "Name",
+        "Core alignment",
+        "Core Team",
+        "Job Title",
+        "Role type",
+        "Status",
+        "Location",
+        "Email",
+        "Hire Date",
+        "Termination Date",
+        "Vendor",
+        "Contact Number",
+        "Team Name",
+        "Manager Name",
+        "Secondary Team",
+        "Modified By",
+        "Modified at",
+      ];
+
+      const rows = employees.map(emp => [
+        emp.prj_align,
+        emp.emp_id,
+        emp.resource_name,
+        emp.core_alignment,
+        emp.core_team,
+        emp.job_title,
+        emp.role_type,
+        emp.status,
+        emp.base_location,
+        emp.email_id,
+        emp.hire_date,
+        emp.term_date,
+        emp.vendor,
+        emp.contact_number,
+        emp.team_name,
+        emp.manager_name,
+        emp.secondary_team,
+        emp.modified_by,
+        emp.modified_at,
+      ]);
+
+      let csvContent =
+        headers.join(",") + "\n" +
+        rows.map(row => row.map(field =>
+          `"${(field ?? "").toString().replace(/"/g, '""')}"`
+        ).join(",")).join("\n");
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'employees.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
 
   return (
@@ -212,11 +272,14 @@ const Dashboard = () => {
         <div className="flex flex-wrap items-center space-x-4">
           <div className="flex flex-col sm:w-auto">
             <label className="text-xs text-gray-600 mb-1">Page</label>
-            <input
-              type="text"
-              className="w-20 h-8 px-2 border border-gray-300 rounded text-sm bg-white"
-              required
-            />
+            <select
+              value={selectedPage}
+              onChange={(e) => setSelectedPage(e.target.value)}
+              className="w-32 h-8 px-2 border border-gray-300 rounded text-sm bg-white cursor-pointer"
+            >
+              <option value="Resourcing">Resourcing</option>
+              <option value="Hiring">Hiring</option>
+            </select>
           </div>
 
           <div className="flex flex-col sm:w-auto">
@@ -227,8 +290,9 @@ const Dashboard = () => {
               className="w-30 h-8 px-1 border border-gray-300 rounded text-sm bg-white cursor-pointer"
             >
               <option>Select</option>
-              <option>Team</option>
-              <option>Manager</option>
+              {getFilterOptions().map(option => (
+                <option key={option} value={option}>{option}</option>
+              ))}
             </select>
           </div>
 
@@ -260,42 +324,44 @@ const Dashboard = () => {
             <span>Reset</span>
           </button>
 
-          <div className="relative inline-block text-left">
-            <button
-              type="button"
-              className="cursor-pointer h-8 w-33 hover:bg-blue-900 text-white px-4 py-2 rounded text-sm font-medium flex items-center space-x-1" style={{ background: '#003a72' }}
-              onClick={() => setShowDropdown(!showDropdown)}
-            >
-              <Plus size={14} className="mr-1" />
-              Add User
-              <ChevronDown size={14} className="ml-2" />
-            </button>
+          {selectedPage === 'Resourcing' && (
+            <div className="relative inline-block text-left">
+              <button
+                type="button"
+                className="cursor-pointer h-8 w-33 hover:bg-blue-900 text-white px-4 py-2 rounded text-sm font-medium flex items-center space-x-1" style={{ background: '#003a72' }}
+                onClick={() => setShowDropdown(!showDropdown)}
+              >
+                <Plus size={14} className="mr-1" />
+                Add User
+                <ChevronDown size={14} className="ml-2" />
+              </button>
 
-            {showDropdown && (
-              <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-                <div className="py-1">
-                  <button
-                    onClick={() => {
-                      setIsAddPersonModal(true);
-                      setShowDropdown(false);
-                    }}
-                    className="cursor-pointer text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                  >
-                    Add New User
-                  </button>
-                  <button
-                    onClick={() => {
-                      setIsAddMultipleModal(true);
-                      setShowDropdown(false);
-                    }}
-                    className="cursor-pointer text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                  >
-                    Add Multiple Users
-                  </button>
+              {showDropdown && (
+                <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+                  <div className="py-1">
+                    <button
+                      onClick={() => {
+                        setIsAddPersonModal(true);
+                        setShowDropdown(false);
+                      }}
+                      className="cursor-pointer text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                    >
+                      Add New User
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsAddMultipleModal(true);
+                        setShowDropdown(false);
+                      }}
+                      className="cursor-pointer text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                    >
+                      Add Multiple Users
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
 
           <button
             onClick={handleExportCSV}
@@ -329,16 +395,23 @@ const Dashboard = () => {
       )}
 
       <div className='my-2'>
-        <EmployeeTable
-          employees={paginatedEmployees}
-          loading={false}
-          isAdmin={isAdmin}
-          selectedEmployees={selectedEmployees}
-          onSelectEmployee={handleSelectEmployee}
-          onSelectAll={handleSelectAll}
-          onDeleteEmployee={handleDeleteEmployee}
-          onEditEmployee={handleEditEmployee}
-        />
+        {selectedPage === 'Hiring' ? (
+          <HiringTable
+            hiringData={paginatedData as Hiring[]}
+            loading={false}
+          />
+        ) : (
+          <EmployeeTable
+            employees={paginatedData as Employee[]}
+            loading={false}
+            isAdmin={isAdmin}
+            selectedEmployees={selectedEmployees}
+            onSelectEmployee={handleSelectEmployee}
+            onSelectAll={handleSelectAll}
+            onDeleteEmployee={handleDeleteEmployee}
+            onEditEmployee={handleEditEmployee}
+          />
+        )}
       </div>
 
       <ConfirmationModal
